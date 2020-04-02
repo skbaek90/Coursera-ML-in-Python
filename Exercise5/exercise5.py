@@ -37,7 +37,7 @@ import utils
 grader = utils.Grader()
 
 # tells matplotlib to embed plots within the notebook
-get_ipython().run_line_magic('matplotlib', 'inline')
+# get_ipython().run_line_magic('matplotlib', 'inline')
 
 
 # ## Submission and Grading
@@ -94,9 +94,9 @@ Xval, yval = data['Xval'], data['yval'][:, 0]
 m = y.size
 
 # Plot training data
-pyplot.plot(X, y, 'ro', ms=10, mec='k', mew=1)
-pyplot.xlabel('Change in water level (x)')
-pyplot.ylabel('Water flowing out of the dam (y)');
+# pyplot.plot(X, y, 'ro', ms=10, mec='k', mew=1)
+# pyplot.xlabel('Change in water level (x)')
+# pyplot.ylabel('Water flowing out of the dam (y)');
 
 
 # ### 1.2 Regularized linear regression cost function
@@ -159,8 +159,8 @@ def linearRegCostFunction(X, y, theta, lambda_=0.0):
 
     # ====================== YOUR CODE HERE ======================
     J = (1/(2*m))*(np.sum((np.dot(X,theta)-y)**2) + lambda_*np.sum(theta[1:]**2))
-    grad = (1/m)*(np.sum((np.dot((np.dot(X,theta)-y).transpose(), X) + lambda_*theta)
-    grad[0] = grad[0] - lambda_/m*theta[0]
+    grad = (1 / m) * ( np.dot( (np.dot(X, theta) - y).transpose(), X ) + lambda_*theta )
+    grad[0] -= lambda_/m*theta[0]
 
     # ============================================================
     return J, grad
@@ -174,8 +174,8 @@ def linearRegCostFunction(X, y, theta, lambda_=0.0):
 theta = np.array([1, 1])
 J, _ = linearRegCostFunction(np.concatenate([np.ones((m, 1)), X], axis=1), y, theta, 1)
 
-print('Cost at theta = [1, 1]:\t   %f ' % J)
-print('This value should be about 303.993192)\n' % J)
+# print('Cost at theta = [1, 1]:\t   %f ' % J)
+# print('This value should be about 303.993192)\n' % J)
 
 
 # After completing a part of the exercise, you can submit your solutions for grading by first adding the function you modified to the submission object, and then sending your function to Coursera for grading. 
@@ -187,8 +187,8 @@ print('This value should be about 303.993192)\n' % J)
 # In[ ]:
 
 
-grader[1] = linearRegCostFunction
-grader.grade()
+# grader[1] = linearRegCostFunction
+# grader.grade()
 
 
 # <a id="section2"></a>
@@ -214,8 +214,8 @@ grader.grade()
 theta = np.array([1, 1])
 J, grad = linearRegCostFunction(np.concatenate([np.ones((m, 1)), X], axis=1), y, theta, 1)
 
-print('Gradient at theta = [1, 1]:  [{:.6f}, {:.6f}] '.format(*grad))
-print(' (this value should be about [-15.303016, 598.250744])\n')
+# print('Gradient at theta = [1, 1]:  [{:.6f}, {:.6f}] '.format(*grad))
+# print(' (this value should be about [-15.303016, 598.250744])\n')
 
 
 # *You should now submit your solutions.*
@@ -223,8 +223,8 @@ print(' (this value should be about [-15.303016, 598.250744])\n')
 # In[ ]:
 
 
-grader[2] = linearRegCostFunction
-grader.grade()
+# grader[2] = linearRegCostFunction
+# grader.grade()
 
 
 # ### Fitting linear regression
@@ -248,10 +248,10 @@ X_aug = np.concatenate([np.ones((m, 1)), X], axis=1)
 theta = utils.trainLinearReg(linearRegCostFunction, X_aug, y, lambda_=0)
 
 #  Plot fit over the data
-pyplot.plot(X, y, 'ro', ms=10, mec='k', mew=1.5)
-pyplot.xlabel('Change in water level (x)')
-pyplot.ylabel('Water flowing out of the dam (y)')
-pyplot.plot(X, np.dot(X_aug, theta), '--', lw=2);
+# pyplot.plot(X, y, 'ro', ms=10, mec='k', mew=1.5)
+# pyplot.xlabel('Change in water level (x)')
+# pyplot.ylabel('Water flowing out of the dam (y)')
+# pyplot.plot(X, np.dot(X_aug, theta), '--', lw=2);
 
 
 # <a id="section3"></a>
@@ -359,9 +359,10 @@ def learningCurve(X, y, Xval, yval, lambda_=0):
     error_val   = np.zeros(m)
 
     # ====================== YOUR CODE HERE ======================
-         
-
-        
+    for i in range(1, m+1):
+        theta = utils.trainLinearReg(linearRegCostFunction, X[:i,:], y[:i], lambda_=1)
+        error_train[i-1], _ = linearRegCostFunction(X[:i,:], y[:i], theta, lambda_=0)
+        error_val[i-1], _ = linearRegCostFunction(Xval, yval, theta, lambda_=0)
     # =============================================================
     return error_train, error_val
 
@@ -379,16 +380,17 @@ X_aug = np.concatenate([np.ones((m, 1)), X], axis=1)
 Xval_aug = np.concatenate([np.ones((yval.size, 1)), Xval], axis=1)
 error_train, error_val = learningCurve(X_aug, y, Xval_aug, yval, lambda_=0)
 
-pyplot.plot(np.arange(1, m+1), error_train, np.arange(1, m+1), error_val, lw=2)
-pyplot.title('Learning curve for linear regression')
-pyplot.legend(['Train', 'Cross Validation'])
-pyplot.xlabel('Number of training examples')
-pyplot.ylabel('Error')
-pyplot.axis([0, 13, 0, 150])
+# pyplot.plot(np.arange(1, m+1), error_train, np.arange(1, m+1), error_val, lw=2)
+# pyplot.title('Learning curve for linear regression')
+# pyplot.legend(['Train', 'Cross Validation'])
+# pyplot.xlabel('Number of training examples')
+# pyplot.ylabel('Error')
+# pyplot.axis([0, 13, 0, 150])
+# pyplot.show()
 
-print('# Training Examples\tTrain Error\tCross Validation Error')
-for i in range(m):
-    print('  \t%d\t\t%f\t%f' % (i+1, error_train[i], error_val[i]))
+# print('# Training Examples\tTrain Error\tCross Validation Error')
+# for i in range(m):
+#     print('  \t%d\t\t%f\t%f' % (i+1, error_train[i], error_val[i]))
 
 
 # *You should now submit your solutions.*
@@ -396,8 +398,8 @@ for i in range(m):
 # In[ ]:
 
 
-grader[3] = learningCurve
-grader.grade()
+# grader[3] = learningCurve
+# grader.grade()
 
 
 # <a id="section4"></a>
@@ -453,9 +455,9 @@ def polyFeatures(X, p):
     X_poly = np.zeros((X.shape[0], p))
 
     # ====================== YOUR CODE HERE ======================
-
-
-
+    for i in range(X.shape[0]):
+        for j in range(1, p+1):
+            X_poly[i][j-1] = X[i][0]**j
     # ============================================================
     return X_poly
 
@@ -484,8 +486,8 @@ X_poly_val -= mu
 X_poly_val /= sigma
 X_poly_val = np.concatenate([np.ones((yval.size, 1)), X_poly_val], axis=1)
 
-print('Normalized Training Example 1:')
-X_poly[0, :]
+# print('Normalized Training Example 1:')
+# X_poly[0, :]
 
 
 # *You should now submit your solutions.*
@@ -493,8 +495,8 @@ X_poly[0, :]
 # In[ ]:
 
 
-grader[4] = polyFeatures
-grader.grade()
+# grader[4] = polyFeatures
+# grader.grade()
 
 
 # ## 3.1 Learning Polynomial Regression
@@ -524,34 +526,36 @@ grader.grade()
 # In[ ]:
 
 
-lambda_ = 0
-theta = utils.trainLinearReg(linearRegCostFunction, X_poly, y,
-                             lambda_=lambda_, maxiter=55)
+# lambda_ = 0
+# theta = utils.trainLinearReg(linearRegCostFunction, X_poly, y,
+#                              lambda_=lambda_, maxiter=55)
 
 # Plot training data and fit
-pyplot.plot(X, y, 'ro', ms=10, mew=1.5, mec='k')
 
-utils.plotFit(polyFeatures, np.min(X), np.max(X), mu, sigma, theta, p)
-
-pyplot.xlabel('Change in water level (x)')
-pyplot.ylabel('Water flowing out of the dam (y)')
-pyplot.title('Polynomial Regression Fit (lambda = %f)' % lambda_)
-pyplot.ylim([-20, 50])
-
-pyplot.figure()
-error_train, error_val = learningCurve(X_poly, y, X_poly_val, yval, lambda_)
-pyplot.plot(np.arange(1, 1+m), error_train, np.arange(1, 1+m), error_val)
-
-pyplot.title('Polynomial Regression Learning Curve (lambda = %f)' % lambda_)
-pyplot.xlabel('Number of training examples')
-pyplot.ylabel('Error')
-pyplot.axis([0, 13, 0, 100])
-pyplot.legend(['Train', 'Cross Validation'])
-
-print('Polynomial Regression (lambda = %f)\n' % lambda_)
-print('# Training Examples\tTrain Error\tCross Validation Error')
-for i in range(m):
-    print('  \t%d\t\t%f\t%f' % (i+1, error_train[i], error_val[i]))
+# pyplot.plot(X, y, 'ro', ms=10, mew=1.5, mec='k')
+#
+# utils.plotFit(polyFeatures, np.min(X), np.max(X), mu, sigma, theta, p)
+#
+# pyplot.xlabel('Change in water level (x)')
+# pyplot.ylabel('Water flowing out of the dam (y)')
+# pyplot.title('Polynomial Regression Fit (lambda = %f)' % lambda_)
+# pyplot.ylim([-20, 50])
+#
+# pyplot.figure()
+# error_train, error_val = learningCurve(X_poly, y, X_poly_val, yval, lambda_)
+# pyplot.plot(np.arange(1, 1+m), error_train, np.arange(1, 1+m), error_val)
+#
+# pyplot.title('Polynomial Regression Learning Curve (lambda = %f)' % lambda_)
+# pyplot.xlabel('Number of training examples')
+# pyplot.ylabel('Error')
+# pyplot.axis([0, 13, 0, 100])
+# pyplot.legend(['Train', 'Cross Validation'])
+# # pyplot.show()
+#
+# print('Polynomial Regression (lambda = %f)\n' % lambda_)
+# print('# Training Examples\tTrain Error\tCross Validation Error')
+# for i in range(m):
+#     print('  \t%d\t\t%f\t%f' % (i+1, error_train[i], error_val[i]))
 
 
 # One way to combat the overfitting (high-variance) problem is to add regularization to the model. In the next section, you will get to  try different $\lambda$ parameters to see how regularization can lead to a better model.
@@ -656,8 +660,11 @@ def validationCurve(X, y, Xval, yval):
     error_val = np.zeros(len(lambda_vec))
 
     # ====================== YOUR CODE HERE ======================
-
-
+    for i in range(len(lambda_vec)):
+        lambda_ = lambda_vec[i]
+        theta = utils.trainLinearReg(linearRegCostFunction, X, y, lambda_, maxiter=55)
+        error_train[i], _ = linearRegCostFunction(X, y, theta, lambda_=0)
+        error_val[i], _ = linearRegCostFunction(Xval, yval, theta, lambda_=0)
 
     # ============================================================
     return lambda_vec, error_train, error_val
@@ -673,16 +680,17 @@ def validationCurve(X, y, Xval, yval):
 # In[ ]:
 
 
-lambda_vec, error_train, error_val = validationCurve(X_poly, y, X_poly_val, yval)
+# lambda_vec, error_train, error_val = validationCurve(X_poly, y, X_poly_val, yval)
 
-pyplot.plot(lambda_vec, error_train, '-o', lambda_vec, error_val, '-o', lw=2)
-pyplot.legend(['Train', 'Cross Validation'])
-pyplot.xlabel('lambda')
-pyplot.ylabel('Error')
+# pyplot.plot(lambda_vec, error_train, '-o', lambda_vec, error_val, '-o', lw=2)
+# pyplot.legend(['Train', 'Cross Validation'])
+# pyplot.xlabel('lambda')
+# pyplot.ylabel('Error')
+# pyplot.show()
 
-print('lambda\t\tTrain Error\tValidation Error')
-for i in range(len(lambda_vec)):
-    print(' %f\t%f\t%f' % (lambda_vec[i], error_train[i], error_val[i]))
+# print('lambda\t\tTrain Error\tValidation Error')
+# for i in range(len(lambda_vec)):
+#     print(' %f\t%f\t%f' % (lambda_vec[i], error_train[i], error_val[i]))
 
 
 # *You should now submit your solutions.*
@@ -690,8 +698,8 @@ for i in range(len(lambda_vec)):
 # In[ ]:
 
 
-grader[5] = validationCurve
-grader.grade()
+# grader[5] = validationCurve
+# grader.grade()
 
 
 # ### 3.4  Optional (ungraded) exercise: Computing test set error
@@ -700,11 +708,9 @@ grader.grade()
 # 
 # *You do not need to submit any solutions for this optional (ungraded) exercise.*
 
-# In[ ]:
-
-
-
-
+# theta = utils.trainLinearReg(linearRegCostFunction, X_poly, y, lambda_=3, maxiter=55)
+# testCost, _ = linearRegCostFunction(X_poly_test, ytest, theta, lambda_=0)
+# print (testCost)
 
 # ### 3.5 Optional (ungraded) exercise: Plotting learning curves with randomly selected examples
 # 
@@ -720,6 +726,54 @@ grader.grade()
 
 # In[ ]:
 
+def learningCurveAverage(X, y, Xval, yval):
+    X_limit = X.shape[0]
+    Xval_limit = Xval.shape[0]
+    training_costs_for_each_i = []
+    val_costs_for_each_i = []
+    for i in range (1, min(X_limit, Xval_limit)+1):
+        training_costs_for_i = []
+        val_costs_for_i = []
+        for iter in range(50):
+            X_random_indices = np.random.choice(X_limit, size=i, replace=False)
+            X_temp = []
+            y_temp = []
+            for idx in X_random_indices:
+                X_temp.append(X[idx])
+                y_temp.append(y[idx])
 
+            X_temp = np.asarray(X_temp)
+            y_temp = np.asarray(y_temp)
 
+            theta = utils.trainLinearReg(linearRegCostFunction, np.asarray(X_temp), np.asarray(y_temp), lambda_=0.01, maxiter=55)
+
+            Xval_random_indices = np.random.choice(Xval_limit, size=i, replace=False)
+            Xval_temp = []
+            yval_temp = []
+            for index in Xval_random_indices:
+                Xval_temp.append(Xval[index])
+                yval_temp.append(yval[index])
+
+            Xval_temp = np.asarray(Xval_temp)
+            yval_temp = np.asarray(yval_temp)
+
+            train_cost, _ = linearRegCostFunction(X_temp, y_temp, theta, lambda_=0)
+            val_cost, _ = linearRegCostFunction(Xval_temp, yval_temp, theta, lambda_=0)
+            training_costs_for_i.append(train_cost)
+            val_costs_for_i.append(val_cost)
+        training_costs_for_each_i.append(np.mean(np.asarray(training_costs_for_i)))
+        val_costs_for_each_i.append(np.mean(np.asarray(val_costs_for_i)))
+
+    pyplot.clf()
+    training_costs_for_each_i = np.asarray(training_costs_for_each_i)
+    val_costs_for_each_i = np.asarray(val_costs_for_each_i)
+
+    pyplot.plot(range(1, 13), training_costs_for_each_i, '-o', range(1, 13), val_costs_for_each_i, '-o', lw=2)
+    pyplot.legend(['Train', 'Cross Validation'])
+    pyplot.xlabel('Number of Training Examples')
+    pyplot.ylabel('Error')
+    pyplot.axis([0, 13, 0, 150])
+    pyplot.show()
+
+learningCurveAverage(X_poly, y, X_poly_val, yval)
 
